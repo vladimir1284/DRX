@@ -23,4 +23,24 @@ El usuario es **petalinux** y nos crea automáticamente una contraseña.
 Para detener la ejecución del emulador usamos `ctrl+a x`
 
 
+## Corriendo el linux en la placa
+
+Se crean las 2 particiones en la SD:
+
+1. FAT32, Label: BOOT, size: 1GB (espacio libre 4MB al inicio)
+2. EXT4, Label: rootfs, size: > 3GB 
+
+Se copian los siguientes ficheros en la partición FAT32:
+- BOOT.BIN
+- image.ub
+- boot.scr
+
+Se extrae el contenido de `rootfs.tar.gz` en la partición EXT4.
+
+Se conecta un terminal serial configurado a 115200 al puerto UART de la placa.
+
+Se configura el **Boot Mode** para **SD Memory Card** como se indica en la siguiente imagen.
+![Utils UML diagram](https://raw.githubusercontent.com/vladimir1284/DRX/master/Petalinux/img/boot_mode.png)
+
+Por último se inserta la tarjeta en la placa y se conecta la energía.
 
