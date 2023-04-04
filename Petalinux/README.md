@@ -13,6 +13,17 @@ Seguimos las instrucciones para [crear un proyecto usando plantilla](https://doc
 Luego importamos la configuración de hardware exportada en Vivado (fichero .xsa) en el proyecto siguiendo los pasos de la guía 
 [UG1144](https://docs.xilinx.com/r/en-US/ug1144-petalinux-tools-reference-guide/Importing-Hardware-Configuration).
 
+## Creando la imagen
+
+Lo primero es construir la imagen con el comando `petalinux-build`.
+
+Luego empaquetamos con el siguiente comando para obtener el fichero `BOOT.BIN`.
+```
+cd images/linux
+petalinux-package --boot --fsbl zynq_fsbl.elf --u-boot --fpga system.bit --force
+```
+Todo bien explicado en el artículo [GPIO and Petalinux - Part 3 (Go, UIO, Go!)](https://www.linkedin.com/pulse/gpio-petalinux-part-3-go-uio-roy-messinger/?trk=public_profile_article_view) de [Roy Messinger](https://www.linkedin.com/in/roy-messinger/?lipi=urn%3Ali%3Apage%3Ad_flagship3_pulse_read%3B25TUdg%2BURyyjyPH%2BV0W%2BfA%3D%3D).
+
 ## Corriendo la imagen con QEMU
 
 Usamos el siguiente comando:
