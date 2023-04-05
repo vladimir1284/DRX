@@ -1,0 +1,7 @@
+blink/design_1_wrapper/platform.tcl
+*.elf
+design_1_wrapper/platform.tcl
+*.addition
+*.tree
+**/*.log
+**/*.a

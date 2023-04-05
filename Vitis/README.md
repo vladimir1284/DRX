@@ -17,7 +17,7 @@ Luego creamos nuestra plataforma en Vitis y el **Hello World** siguiendo el vide
 
 ## Encendiendo un led desde la línea de comando
 
-Es solo seguir el tutorial [https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18841846/AXI+GPIO](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18841846/AXI+GPIO).
+Es solo seguir el tutorial [Test procedure on ZCU102 eval board](https://xilinx-wiki.atlassian.net/wiki/spaces/A/pages/18841846/AXI+GPIO).
 
 Los comandos son:
 
