@@ -1,0 +1,6 @@
+23:44:11 **** Clean-only build of project led_linux ****
+buildplatform.sh 33093 led_linux clean 
+XSDB Server Channel: tcfchan#5
+
+23:44:17 Build Finished (took 5s.230ms)
+

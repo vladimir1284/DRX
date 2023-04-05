@@ -1,0 +1,8 @@
+TRACE::2023-04-04.21:51:00::SCWLinux::Copying the qemu file from  /home/vladimir/Documentos/LADETEC/DRX/Tutorial/labs/test_zed_mem/led_linux/resources/led_linux/linux_domain/qemu_args.txt To /home/vladimir/Documentos/LADETEC/DRX/Tutorial/labs/test_zed_mem/led_linux/export/led_linux/sw/led_linux/qemu/
+TRACE::2023-04-04.21:51:00::SCWLinux::Copying the qemu file from  /home/vladimir/Documentos/LADETEC/DRX/Tutorial/labs/test_zed_mem/led_linux/resources/led_linux/linux_domain/qemu_args.txt To /home/vladimir/Documentos/LADETEC/DRX/Tutorial/labs/test_zed_mem/led_linux/export/led_linux/sw/led_linux/linux_domain/qemu/
+TRACE::2023-04-04.21:51:00::SCWLinux:: Copying the user libraries. 
+TRACE::2023-04-04.21:51:00::SCWLinux::Skipping the Petalinux build as image is already given.
+TRACE::2023-04-04.23:42:22::SCWLinux::Copying the qemu file from  /home/vladimir/Documentos/LADETEC/DRX/Work/DRX/Vitis/blink/led_linux/resources/led_linux/linux_domain/qemu_args.txt To /home/vladimir/Documentos/LADETEC/DRX/Work/DRX/Vitis/blink/led_linux/export/led_linux/sw/led_linux/qemu/
+TRACE::2023-04-04.23:42:22::SCWLinux::Copying the qemu file from  /home/vladimir/Documentos/LADETEC/DRX/Work/DRX/Vitis/blink/led_linux/resources/led_linux/linux_domain/qemu_args.txt To /home/vladimir/Documentos/LADETEC/DRX/Work/DRX/Vitis/blink/led_linux/export/led_linux/sw/led_linux/linux_domain/qemu/
+TRACE::2023-04-04.23:42:22::SCWLinux:: Copying the user libraries. 
+TRACE::2023-04-04.23:42:22::SCWLinux::Skipping the Petalinux build as image is already given.

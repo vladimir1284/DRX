@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<section name="Workbench">
+	<item key="bif_file" value="/home/vladimir/LAPTOP/vladimir/Documentos/SOFTWARE/Petalinux/proyects/zedboard_leds/images/linux"/>
+	<item key="platform_editor" value="/home/vladimir/LAPTOP/vladimir/Documentos/SOFTWARE/Petalinux/proyects/zedboard_leds/images/linux"/>
+	<item key="boot_components_directory" value="/home/vladimir/LAPTOP/vladimir/Documentos/SOFTWARE/Petalinux/proyects/zedboard_leds/images/linux"/>
+</section>

@@ -1,0 +1,7 @@
+23:44:17 **** Clean-only build of configuration Debug for project leds ****
+make clean 
+rm -rf  ./src/helloworld.o ./src/platform.o  ./src/helloworld.d ./src/platform.d  leds.elf.size  leds.elf
+ 
+
+23:44:17 Build Finished (took 666ms)
+

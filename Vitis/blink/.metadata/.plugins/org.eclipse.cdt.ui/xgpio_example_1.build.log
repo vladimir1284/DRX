@@ -1,0 +1,7 @@
+23:44:18 **** Clean-only build of configuration Debug for project xgpio_example_1 ****
+make clean 
+rm -rf  ./src/xgpio_example.o  ./src/xgpio_example.d  xgpio_example_1.elf.size  xgpio_example_1.elf
+ 
+
+23:44:19 Build Finished (took 709ms)
+

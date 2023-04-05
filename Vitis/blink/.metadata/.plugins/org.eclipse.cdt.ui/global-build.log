@@ -1,0 +1,129 @@
+23:42:20 **** Build of project led_linux ****
+buildplatform.sh 33093 led_linux  
+XSDB Server Channel: tcfchan#3
+23:42:25 **** Build of configuration Debug for project test_leds ****
+make all 
+Building file: ../src/blink.c
+Invoking: ARM v7 Linux gcc compiler
+arm-linux-gnueabihf-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/blink.o" -MMD -MP -MF"src/blink.d" -MT"src/blink.o" -o "src/blink.o" "../src/blink.c"
+../src/blink.c:49:12: warning: 'pin_read' defined but not used [-Wunused-function]
+   49 | static int pin_read(int pin){
+      |            ^~~~~~~~
+Finished building: ../src/blink.c
+ 
+Building file: ../src/helloworld.c
+Invoking: ARM v7 Linux gcc compiler
+arm-linux-gnueabihf-gcc -Wall -O0 -g3 -c -fmessage-length=0 -MT"src/helloworld.o" -MMD -MP -MF"src/helloworld.d" -MT"src/helloworld.o" -o "src/helloworld.o" "../src/helloworld.c"
+Finished building: ../src/helloworld.c
+ 
+Building target: test_leds.elf
+Invoking: ARM v7 Linux gcc linker
+arm-linux-gnueabihf-gcc  -o "test_leds.elf"  ./src/blink.o ./src/helloworld.o   
+Finished building target: test_leds.elf
+ 
+Invoking: ARM v7 Linux Print Size
+arm-linux-gnueabihf-size test_leds.elf  |tee "test_leds.elf.size"
+   text	   data	    bss	    dec	    hex	filename
+   3339	    356	      4	   3699	    e73	test_leds.elf
+Finished building: test_leds.elf.size
+ 
+23:44:06 **** Clean-only build of project design_1_wrapper ****
+buildplatform.sh 33093 design_1_wrapper clean 
+XSDB Server Channel: tcfchan#4
+Cleaning the zynq_fsbl application.
+rm -rf  pcap.o  ps7_init.o  nand.o  qspi.o  rsa.o  main.o  md5.o  image_mover.o  nor.o  fsbl_hooks.o  sd.o  fsbl_handoff.o  zyn
+q_fsbl_bsp/ps7_cortexa9_0/lib/libxil.a fsbl.elf *.o
+
+Cleaning the zynq_fsbl application, bsp
+make -C ps7_cortexa9_0/libsrc/qspips_v3_10/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/scugic_v5_0/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/ttcps_v3_16/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/scuwdt_v2_4/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/devcfg_v3_7/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/standalone_v8_0/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/xilrsa_v1_6/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/sdps_v4_0/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/gpio_v4_9/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/scutimer_v2_4/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/emacps_v3_17/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/usbps_v2_7/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/coresightps_dcc_v1_8/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/ddrps_v1_2/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/xadcps_v2_6/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/cpu_cortexa9_v2_11/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/dmaps_v2_8/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/xilffs_v4_8/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/uartps_v3_11/src -s clean 
+
+rm -f ps7_cortexa9_0/lib/libxil.a
+
+Cleaning the BSP for domain  - standalone_ps7_cortexa9_0
+make -C ps7_cortexa9_0/libsrc/qspips_v3_10/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/scugic_v5_0/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/ttcps_v3_16/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/scuwdt_v2_4/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/devcfg_v3_7/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/standalone_v8_0/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/sdps_v4_0/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/gpio_v4_9/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/scutimer_v2_4/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/emacps_v3_17/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/usbps_v2_7/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/coresightps_dcc_v1_8/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/ddrps_v1_2/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/xadcps_v2_6/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/cpu_cortexa9_v2_11/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/dmaps_v2_8/src -s clean 
+
+make -C ps7_cortexa9_0/libsrc/uartps_v3_11/src -s clean 
+
+rm -f ps7_cortexa9_0/lib/libxil.a
+
+23:44:11 **** Clean-only build of project led_linux ****
+buildplatform.sh 33093 led_linux clean 
+XSDB Server Channel: tcfchan#5
+23:44:17 **** Clean-only build of configuration Debug for project leds ****
+make clean 
+rm -rf  ./src/helloworld.o ./src/platform.o  ./src/helloworld.d ./src/platform.d  leds.elf.size  leds.elf
+ 
+23:44:17 **** Clean-only build of configuration Debug for project test_leds ****
+make clean 
+rm -rf  ./src/blink.o ./src/helloworld.o  ./src/blink.d ./src/helloworld.d  test_leds.elf.size  test_leds.elf
+ 
+23:44:18 **** Clean-only build of configuration Debug for project xgpio_example_1 ****
+make clean 
+rm -rf  ./src/xgpio_example.o  ./src/xgpio_example.d  xgpio_example_1.elf.size  xgpio_example_1.elf
+ 
