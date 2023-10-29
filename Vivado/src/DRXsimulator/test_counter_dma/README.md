@@ -1,5 +1,6 @@
 # Counter Config
 Proyecto para probar en hardware el IP que simula el dato adquirido por medio de un contador contador.
+Se pasan los datos generados por el contador hacia la memoria del PS usando DMA.
 
 Permite que se configure:
 - PRF (cuantas celdas)
