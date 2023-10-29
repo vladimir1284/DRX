@@ -9,3 +9,4 @@ Permite que se configure:
 Vivado/2022.2/bin/vivado -mode batch -source counter_dma.tcl 
 
 ## Block design
+![image](https://github.com/vladimir1284/DRX/blob/main/Vivado/src/DRXsimulator/test_counter_dma/counter_dma.png)
