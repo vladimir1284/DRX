@@ -1,0 +1,31 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Sat Oct 28 01:27:14 2023
+[*]
+[dumpfile] "/home/vladimir/Documentos/LADETEC/DRX/Tutorial/labs/ip_repo/counterConfig_1_0/hdl/sim.vcd"
+[dumpfile_mtime] "Sat Oct 28 01:27:02 2023"
+[dumpfile_size] 5123
+[savefile] "/home/vladimir/Documentos/LADETEC/DRX/Tutorial/labs/ip_repo/counterConfig_1_0/hdl/signal_config.gtkw"
+[timestart] 0
+[size] 1848 1016
+[pos] -1 -1
+*-23.526665 55700000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] counterconfig_v1_0_s00_axi_tb.
+[sst_width] 233
+[signals_width] 241
+[sst_expanded] 1
+[sst_vpaned_height] 289
+@28
+counterconfig_v1_0_s00_axi_tb.enable
+counterconfig_v1_0_s00_axi_tb.freq_div
+@22
+counterconfig_v1_0_s00_axi_tb.max_count[15:0]
+@28
+counterconfig_v1_0_s00_axi_tb.s_axi_aclk
+@22
+counterconfig_v1_0_s00_axi_tb.s_axi_awaddr[3:0]
+counterconfig_v1_0_s00_axi_tb.s_axi_wdata[31:0]
+@25
+counterconfig_v1_0_s00_axi_tb.s_axi_wready
+[pattern_trace] 1
+[pattern_trace] 0
