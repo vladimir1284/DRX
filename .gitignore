@@ -1,3 +1,11 @@
 .unotes/*
 .vscode/*
 **/*.log
+Vitis/blink/*
+Vitis/DRXsimulator/test_counter_config/blink/.metadata/*
+Vivado/src/DRXsimulator/ip_repo/managed_ip_project/*
+*.vcd
+*.cf
+**/xgui/*
+Vivado/src/DRXsimulator/ip_repo/counterSimulator_1_0/bd/bd.tcl
+Vivado/src/DRXsimulator/ip_repo/counterSimulator_1_0/component.xml

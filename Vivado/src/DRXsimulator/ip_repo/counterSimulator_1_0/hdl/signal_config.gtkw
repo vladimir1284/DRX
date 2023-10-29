@@ -1,0 +1,42 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Sun Oct 29 03:03:08 2023
+[*]
+[dumpfile] "/home/vladimir/Documentos/LADETEC/DRX/Work/DRX/Vivado/src/DRXsimulator/ip_repo/counterSimulator_1_0/hdl/sim.vcd"
+[dumpfile_mtime] "Sun Oct 29 03:02:44 2023"
+[dumpfile_size] 13066
+[savefile] "/home/vladimir/Documentos/LADETEC/DRX/Work/DRX/Vivado/src/DRXsimulator/ip_repo/counterSimulator_1_0/hdl/signal_config.gtkw"
+[timestart] 0
+[size] 1848 1016
+[pos] -1 -1
+*-27.244293 515000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] countersimulator_v1_0_m00_axis_tb.
+[sst_width] 233
+[signals_width] 307
+[sst_expanded] 1
+[sst_vpaned_height] 289
+@28
+countersimulator_v1_0_m00_axis_tb.enable_tb
+@24
+countersimulator_v1_0_m00_axis_tb.m_axis_aresetn_tb
+@28
+countersimulator_v1_0_m00_axis_tb.m_axis_aclk_tb
+@24
+countersimulator_v1_0_m00_axis_tb.m_axis_tdata_tb[31:0]
+@28
+countersimulator_v1_0_m00_axis_tb.m_axis_tvalid_tb
+countersimulator_v1_0_m00_axis_tb.m_axis_tlast_tb
+countersimulator_v1_0_m00_axis_tb.m_axis_tready_tb
+@22
+countersimulator_v1_0_m00_axis_tb.max_count_tb[15:0]
+@200
+-UUT
+@28
+countersimulator_v1_0_m00_axis_tb.dut.rst
+@24
+countersimulator_v1_0_m00_axis_tb.dut.number_of_output_words[15:0]
+countersimulator_v1_0_m00_axis_tb.dut.count_sig[15:0]
+@28
+countersimulator_v1_0_m00_axis_tb.dut.tx_en
+[pattern_trace] 1
+[pattern_trace] 0
