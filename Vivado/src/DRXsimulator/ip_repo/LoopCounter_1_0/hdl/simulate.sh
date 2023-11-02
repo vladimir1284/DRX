@@ -1,6 +1,6 @@
-ghdl -a LoopCounter_v1_0_S00_AXI.vhd 
-ghdl -a LoopCounter_v1_0_S00_AXI_tb.vhd 
-ghdl -e LoopCounter_v1_0_S00_AXI_tb
-ghdl -r LoopCounter_v1_0_S00_AXI_tb --vcd=sim.vcd --stop-time=80ns
+ghdl -a LoopCounter_v1_0_M00_AXIS.vhd 
+ghdl -a LoopCounter_v1_0_M00_AXIS_tb.vhd 
+ghdl -e LoopCounter_v1_0_M00_AXIS_tb
+ghdl -r LoopCounter_v1_0_M00_AXIS_tb --vcd=sim.vcd --stop-time=1000ns
 #gtkwave sim.vcd
 gtkwave signal_config.gtkw

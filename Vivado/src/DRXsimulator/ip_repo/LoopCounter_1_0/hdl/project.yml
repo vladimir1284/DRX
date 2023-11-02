@@ -1,10 +1,10 @@
-toplevel: "LoopCounter_v1_0_S00_AXI_tb"
+toplevel: "LoopCounter_v1_0_M00_AXIS_tb"
 name: project_config
 files: 
-  - name: "LoopCounter_v1_0_S00_AXI_tb.vhd"
+  - name: "LoopCounter_v1_0_M00_AXIS_tb.vhd"
     is_include_file: false
     logical_name: ""
-  - name: "LoopCounter_v1_0_S00_AXI.vhd"
+  - name: "LoopCounter_v1_0_M00_AXIS.vhd"
     is_include_file: false
     logical_name: "mylib"
 tool_options: 

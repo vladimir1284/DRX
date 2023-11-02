@@ -203,13 +203,14 @@ begin
         counter_index       <= (others => '0');
         transaction_counter <= (others => '0');
         tx_done             <= '0';
-      else
+      elsif (mst_exec_state = SEND_STREAM or mst_exec_state = WAIT_PRT) then
         counter_index     <= counter_index + 1;
         tx_done           <= '1';
         if (counter_index <= unsigned(CELLS_TO_SEND)) then
           tx_done           <= '0';
         elsif (counter_index = unsigned(CELLS_IN_PRT)) then
           counter_index       <= (others => '0');
+          tx_done             <= '0';
           transaction_counter <= transaction_counter + 1;
         end if;
       end if;
@@ -227,7 +228,7 @@ begin
         if (counter_index < 1) then
           stream_data_out <= std_logic_vector(transaction_counter);
         else
-          stream_data_out <= std_logic_vector(counter_index);
+          stream_data_out(CELLS_DATA_WIDTH - 1 downto 0) <= std_logic_vector(counter_index);
         end if;
       end if;
     end if;

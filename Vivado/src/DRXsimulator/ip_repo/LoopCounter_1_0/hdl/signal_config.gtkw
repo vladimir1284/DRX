@@ -1,0 +1,28 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Thu Nov  2 03:15:42 2023
+[*]
+[dumpfile] "/home/vladimir/Documentos/LADETEC/DRX/Work/DRX/Vivado/src/DRXsimulator/ip_repo/LoopCounter_1_0/hdl/sim.vcd"
+[dumpfile_mtime] "Thu Nov  2 03:13:35 2023"
+[dumpfile_size] 7726
+[savefile] "/home/vladimir/Documentos/LADETEC/DRX/Work/DRX/Vivado/src/DRXsimulator/ip_repo/LoopCounter_1_0/hdl/signal_config.gtkw"
+[timestart] 0
+[size] 1848 1016
+[pos] -1 -1
+*-25.802483 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 233
+[signals_width] 198
+[sst_expanded] 1
+[sst_vpaned_height] 289
+@28
+loopcounter_v1_0_m00_axis_tb.enable_tb
+loopcounter_v1_0_m00_axis_tb.m_axis_tready_tb
+loopcounter_v1_0_m00_axis_tb.m_axis_aclk_tb
+@24
+loopcounter_v1_0_m00_axis_tb.m_axis_tdata_tb[31:0]
+@28
+loopcounter_v1_0_m00_axis_tb.m_axis_tvalid_tb
+@29
+loopcounter_v1_0_m00_axis_tb.m_axis_tlast_tb
+[pattern_trace] 1
+[pattern_trace] 0
