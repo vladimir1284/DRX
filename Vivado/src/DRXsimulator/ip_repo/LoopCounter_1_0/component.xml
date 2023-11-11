@@ -9,7 +9,9 @@
       <spirit:name>M00_AXIS</spirit:name>
       <spirit:busType spirit:vendor="xilinx.com" spirit:library="interface" spirit:name="axis" spirit:version="1.0"/>
       <spirit:abstractionType spirit:vendor="xilinx.com" spirit:library="interface" spirit:name="axis_rtl" spirit:version="1.0"/>
-      <spirit:master/>
+      <spirit:master>
+        <spirit:addressSpaceRef spirit:addressSpaceRef="M00_AXIS"/>
+      </spirit:master>
       <spirit:portMaps>
         <spirit:portMap>
           <spirit:logicalPort>
@@ -55,7 +57,7 @@
       <spirit:parameters>
         <spirit:parameter>
           <spirit:name>WIZ_DATA_WIDTH</spirit:name>
-          <spirit:value spirit:format="long" spirit:id="BUSIFPARAM_VALUE.M00_AXIS.WIZ_DATA_WIDTH" spirit:choiceRef="choice_list_ea018de4">32</spirit:value>
+          <spirit:value spirit:format="long" spirit:id="BUSIFPARAM_VALUE.M00_AXIS.WIZ_DATA_WIDTH" spirit:choiceRef="choice_list_6fc15197">32</spirit:value>
         </spirit:parameter>
       </spirit:parameters>
     </spirit:busInterface>
@@ -77,7 +79,7 @@
       <spirit:parameters>
         <spirit:parameter>
           <spirit:name>POLARITY</spirit:name>
-          <spirit:value spirit:id="BUSIFPARAM_VALUE.M00_AXIS_RST.POLARITY">ACTIVE_LOW</spirit:value>
+          <spirit:value spirit:id="BUSIFPARAM_VALUE.M00_AXIS_RST.POLARITY" spirit:choiceRef="choice_list_74b5137e">ACTIVE_LOW</spirit:value>
         </spirit:parameter>
       </spirit:parameters>
     </spirit:busInterface>
@@ -108,6 +110,13 @@
       </spirit:parameters>
     </spirit:busInterface>
   </spirit:busInterfaces>
+  <spirit:addressSpaces>
+    <spirit:addressSpace>
+      <spirit:name>M00_AXIS</spirit:name>
+      <spirit:range spirit:format="long">1</spirit:range>
+      <spirit:width spirit:format="long">1</spirit:width>
+    </spirit:addressSpace>
+  </spirit:addressSpaces>
   <spirit:model>
     <spirit:views>
       <spirit:view>
@@ -119,6 +128,12 @@
         <spirit:fileSetRef>
           <spirit:localName>xilinx_vhdlsynthesis_view_fileset</spirit:localName>
         </spirit:fileSetRef>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>viewChecksum</spirit:name>
+            <spirit:value>df4be549</spirit:value>
+          </spirit:parameter>
+        </spirit:parameters>
       </spirit:view>
       <spirit:view>
         <spirit:name>xilinx_vhdlbehavioralsimulation</spirit:name>
@@ -129,6 +144,12 @@
         <spirit:fileSetRef>
           <spirit:localName>xilinx_vhdlbehavioralsimulation_view_fileset</spirit:localName>
         </spirit:fileSetRef>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>viewChecksum</spirit:name>
+            <spirit:value>df4be549</spirit:value>
+          </spirit:parameter>
+        </spirit:parameters>
       </spirit:view>
       <spirit:view>
         <spirit:name>xilinx_xpgui</spirit:name>
@@ -137,6 +158,12 @@
         <spirit:fileSetRef>
           <spirit:localName>xilinx_xpgui_view_fileset</spirit:localName>
         </spirit:fileSetRef>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>viewChecksum</spirit:name>
+            <spirit:value>a7edb15e</spirit:value>
+          </spirit:parameter>
+        </spirit:parameters>
       </spirit:view>
       <spirit:view>
         <spirit:name>bd_tcl</spirit:name>
@@ -145,76 +172,69 @@
         <spirit:fileSetRef>
           <spirit:localName>bd_tcl_view_fileset</spirit:localName>
         </spirit:fileSetRef>
+        <spirit:parameters>
+          <spirit:parameter>
+            <spirit:name>viewChecksum</spirit:name>
+            <spirit:value>45a2f450</spirit:value>
+          </spirit:parameter>
+        </spirit:parameters>
       </spirit:view>
     </spirit:views>
     <spirit:ports>
       <spirit:port>
-        <spirit:name>m00_axis_tdata</spirit:name>
-        <spirit:wire>
-          <spirit:direction>out</spirit:direction>
-          <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_M00_AXIS_TDATA_WIDTH&apos;))-1)">31</spirit:left>
-            <spirit:right spirit:format="long">0</spirit:right>
-          </spirit:vector>
-          <spirit:wireTypeDefs>
-            <spirit:wireTypeDef>
-              <spirit:typeName>wire</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
-            </spirit:wireTypeDef>
-          </spirit:wireTypeDefs>
-        </spirit:wire>
-      </spirit:port>
-      <spirit:port>
-        <spirit:name>m00_axis_tstrb</spirit:name>
-        <spirit:wire>
-          <spirit:direction>out</spirit:direction>
-          <spirit:vector>
-            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="((spirit:decode(id(&apos;MODELPARAM_VALUE.C_M00_AXIS_TDATA_WIDTH&apos;))/8)-1)">3</spirit:left>
-            <spirit:right spirit:format="long">0</spirit:right>
-          </spirit:vector>
-          <spirit:wireTypeDefs>
-            <spirit:wireTypeDef>
-              <spirit:typeName>wire</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
-            </spirit:wireTypeDef>
-          </spirit:wireTypeDefs>
-        </spirit:wire>
-      </spirit:port>
-      <spirit:port>
-        <spirit:name>m00_axis_tlast</spirit:name>
-        <spirit:wire>
-          <spirit:direction>out</spirit:direction>
-          <spirit:wireTypeDefs>
-            <spirit:wireTypeDef>
-              <spirit:typeName>wire</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
-            </spirit:wireTypeDef>
-          </spirit:wireTypeDefs>
-        </spirit:wire>
-      </spirit:port>
-      <spirit:port>
-        <spirit:name>m00_axis_tvalid</spirit:name>
-        <spirit:wire>
-          <spirit:direction>out</spirit:direction>
-          <spirit:wireTypeDefs>
-            <spirit:wireTypeDef>
-              <spirit:typeName>wire</spirit:typeName>
-              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
-              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
-            </spirit:wireTypeDef>
-          </spirit:wireTypeDefs>
-        </spirit:wire>
-      </spirit:port>
-      <spirit:port>
-        <spirit:name>m00_axis_tready</spirit:name>
+        <spirit:name>m00_ENABLE</spirit:name>
         <spirit:wire>
           <spirit:direction>in</spirit:direction>
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
-              <spirit:typeName>wire</spirit:typeName>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>m00_CELLS_IN_PRT</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.M00_CELLS_DATA_WIDTH&apos;)) - 1)">15</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>m00_CELLS_TO_SEND</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.M00_CELLS_DATA_WIDTH&apos;)) - 1)">15</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>m00_VALID_CONFIG</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
               <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
               <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
@@ -227,7 +247,7 @@
           <spirit:direction>in</spirit:direction>
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
-              <spirit:typeName>wire</spirit:typeName>
+              <spirit:typeName>std_logic</spirit:typeName>
               <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
               <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
@@ -240,7 +260,80 @@
           <spirit:direction>in</spirit:direction>
           <spirit:wireTypeDefs>
             <spirit:wireTypeDef>
-              <spirit:typeName>wire</spirit:typeName>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>m00_axis_tvalid</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>m00_axis_tdata</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="(spirit:decode(id(&apos;MODELPARAM_VALUE.C_M00_AXIS_TDATA_WIDTH&apos;)) - 1)">31</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>m00_axis_tstrb</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:vector>
+            <spirit:left spirit:format="long" spirit:resolve="dependent" spirit:dependency="((spirit:decode(id(&apos;MODELPARAM_VALUE.C_M00_AXIS_TDATA_WIDTH&apos;)) / 8) - 1)">3</spirit:left>
+            <spirit:right spirit:format="long">0</spirit:right>
+          </spirit:vector>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic_vector</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>m00_axis_tlast</spirit:name>
+        <spirit:wire>
+          <spirit:direction>out</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
+              <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
+              <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
+            </spirit:wireTypeDef>
+          </spirit:wireTypeDefs>
+        </spirit:wire>
+      </spirit:port>
+      <spirit:port>
+        <spirit:name>m00_axis_tready</spirit:name>
+        <spirit:wire>
+          <spirit:direction>in</spirit:direction>
+          <spirit:wireTypeDefs>
+            <spirit:wireTypeDef>
+              <spirit:typeName>std_logic</spirit:typeName>
               <spirit:viewNameRef>xilinx_vhdlsynthesis</spirit:viewNameRef>
               <spirit:viewNameRef>xilinx_vhdlbehavioralsimulation</spirit:viewNameRef>
             </spirit:wireTypeDef>
@@ -261,12 +354,22 @@
         <spirit:description>Start count is the number of clock cycles the master will wait before initiating/issuing any transaction.</spirit:description>
         <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.C_M00_AXIS_START_COUNT" spirit:order="4" spirit:minimum="1" spirit:rangeType="long">32</spirit:value>
       </spirit:modelParameter>
+      <spirit:modelParameter spirit:dataType="integer">
+        <spirit:name>M00_CELLS_DATA_WIDTH</spirit:name>
+        <spirit:displayName>M00 Cells Data Width</spirit:displayName>
+        <spirit:value spirit:format="long" spirit:resolve="generated" spirit:id="MODELPARAM_VALUE.M00_CELLS_DATA_WIDTH">16</spirit:value>
+      </spirit:modelParameter>
     </spirit:modelParameters>
   </spirit:model>
   <spirit:choices>
     <spirit:choice>
-      <spirit:name>choice_list_ea018de4</spirit:name>
+      <spirit:name>choice_list_6fc15197</spirit:name>
       <spirit:enumeration>32</spirit:enumeration>
+    </spirit:choice>
+    <spirit:choice>
+      <spirit:name>choice_list_74b5137e</spirit:name>
+      <spirit:enumeration>ACTIVE_HIGH</spirit:enumeration>
+      <spirit:enumeration>ACTIVE_LOW</spirit:enumeration>
     </spirit:choice>
   </spirit:choices>
   <spirit:fileSets>
@@ -279,7 +382,7 @@
       <spirit:file>
         <spirit:name>hdl/LoopCounter_v1_0.vhd</spirit:name>
         <spirit:fileType>vhdlSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_069f292a</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_791bdb26</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
     <spirit:fileSet>
@@ -298,7 +401,7 @@
       <spirit:file>
         <spirit:name>xgui/LoopCounter_v1_0.tcl</spirit:name>
         <spirit:fileType>tclSource</spirit:fileType>
-        <spirit:userFileType>CHECKSUM_42d33723</spirit:userFileType>
+        <spirit:userFileType>CHECKSUM_a7edb15e</spirit:userFileType>
         <spirit:userFileType>XGUI_VERSION_2</spirit:userFileType>
       </spirit:file>
     </spirit:fileSet>
@@ -316,7 +419,7 @@
       <spirit:name>C_M00_AXIS_TDATA_WIDTH</spirit:name>
       <spirit:displayName>C M00 AXIS TDATA WIDTH</spirit:displayName>
       <spirit:description>Width of S_AXIS address bus. The slave accepts the read and write addresses of width C_M_AXIS_TDATA_WIDTH.</spirit:description>
-      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.C_M00_AXIS_TDATA_WIDTH" spirit:choiceRef="choice_list_ea018de4" spirit:order="3">32</spirit:value>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.C_M00_AXIS_TDATA_WIDTH" spirit:choiceRef="choice_list_6fc15197" spirit:order="3">32</spirit:value>
       <spirit:vendorExtensions>
         <xilinx:parameterInfo>
           <xilinx:enablement>
@@ -335,6 +438,11 @@
       <spirit:name>Component_Name</spirit:name>
       <spirit:value spirit:resolve="user" spirit:id="PARAM_VALUE.Component_Name" spirit:order="1">LoopCounter_v1_0</spirit:value>
     </spirit:parameter>
+    <spirit:parameter>
+      <spirit:name>M00_CELLS_DATA_WIDTH</spirit:name>
+      <spirit:displayName>M00 Cells Data Width</spirit:displayName>
+      <spirit:value spirit:format="long" spirit:resolve="user" spirit:id="PARAM_VALUE.M00_CELLS_DATA_WIDTH">16</spirit:value>
+    </spirit:parameter>
   </spirit:parameters>
   <spirit:vendorExtensions>
     <xilinx:coreExtensions>
@@ -345,11 +453,17 @@
         <xilinx:taxonomy>AXI_Peripheral</xilinx:taxonomy>
       </xilinx:taxonomies>
       <xilinx:displayName>LoopCounter_v1.0</xilinx:displayName>
-      <xilinx:coreRevision>1</xilinx:coreRevision>
-      <xilinx:coreCreationDateTime>2023-11-01T21:30:26Z</xilinx:coreCreationDateTime>
+      <xilinx:coreRevision>2</xilinx:coreRevision>
+      <xilinx:coreCreationDateTime>2023-11-09T15:19:48Z</xilinx:coreCreationDateTime>
     </xilinx:coreExtensions>
     <xilinx:packagingInfo>
       <xilinx:xilinxVersion>2022.2</xilinx:xilinxVersion>
+      <xilinx:checksum xilinx:scope="busInterfaces" xilinx:value="ff5805df"/>
+      <xilinx:checksum xilinx:scope="addressSpaces" xilinx:value="0e659c01"/>
+      <xilinx:checksum xilinx:scope="fileGroups" xilinx:value="66f2a077"/>
+      <xilinx:checksum xilinx:scope="ports" xilinx:value="957fe95e"/>
+      <xilinx:checksum xilinx:scope="hdlParameters" xilinx:value="a5502877"/>
+      <xilinx:checksum xilinx:scope="parameters" xilinx:value="0b88c183"/>
     </xilinx:packagingInfo>
   </spirit:vendorExtensions>
 </spirit:component>

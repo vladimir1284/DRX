@@ -1,0 +1,39 @@
+[*]
+[*] GTKWave Analyzer v3.3.103 (w)1999-2019 BSI
+[*] Sat Nov 11 01:11:00 2023
+[*]
+[dumpfile] "/home/vladimir/Documentos/LADETEC/DRX/Work/DRX/Vivado/src/DRXsimulator/ip_repo/LoopCounterConfig_1_0/hdl/sim.vcd"
+[dumpfile_mtime] "Sat Nov 11 01:10:55 2023"
+[dumpfile_size] 5820
+[savefile] "/home/vladimir/Documentos/LADETEC/DRX/Work/DRX/Vivado/src/DRXsimulator/ip_repo/LoopCounterConfig_1_0/hdl/signal_config.gtkw"
+[timestart] 0
+[size] 1848 1016
+[pos] -1 -1
+*-23.802483 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] loopcounterconfig_v1_0_s00_axi_tb.
+[sst_width] 233
+[signals_width] 198
+[sst_expanded] 1
+[sst_vpaned_height] 289
+@28
+loopcounterconfig_v1_0_s00_axi_tb.loopcounterconfig_v1_0_s00_axi_inst.enable
+@24
+loopcounterconfig_v1_0_s00_axi_tb.loopcounterconfig_v1_0_s00_axi_inst.cells_in_prt[15:0]
+loopcounterconfig_v1_0_s00_axi_tb.loopcounterconfig_v1_0_s00_axi_inst.cells_to_send[15:0]
+@22
+loopcounterconfig_v1_0_s00_axi_tb.loopcounterconfig_v1_0_s00_axi_inst.axi_awaddr[3:0]
+@24
+loopcounterconfig_v1_0_s00_axi_tb.loopcounterconfig_v1_0_s00_axi_inst.s_axi_wdata[31:0]
+@28
+loopcounterconfig_v1_0_s00_axi_tb.loopcounterconfig_v1_0_s00_axi_inst.s_axi_awready
+loopcounterconfig_v1_0_s00_axi_tb.loopcounterconfig_v1_0_s00_axi_inst.aw_en
+@24
+loopcounterconfig_v1_0_s00_axi_tb.loopcounterconfig_v1_0_s00_axi_inst.axi_rdata[31:0]
+@22
+loopcounterconfig_v1_0_s00_axi_tb.loopcounterconfig_v1_0_s00_axi_inst.axi_araddr[3:0]
+@28
+loopcounterconfig_v1_0_s00_axi_tb.loopcounterconfig_v1_0_s00_axi_inst.axi_arready
+@29
+loopcounterconfig_v1_0_s00_axi_tb.loopcounterconfig_v1_0_s00_axi_inst.s_axi_aclk
+[pattern_trace] 1
+[pattern_trace] 0

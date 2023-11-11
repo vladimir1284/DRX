@@ -90,6 +90,8 @@ begin
     wait for 10 ns;
     M_AXIS_ARESETN_tb <= '1';
     enable_tb         <= '1';
+    wait for 200 ns;
+    M_AXIS_TREADY_tb <= '0';
     wait;
 
   end process;
