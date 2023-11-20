@@ -70,7 +70,7 @@ begin
   -- Clock process
   process
   begin
-    while now < 1000 ns loop
+    while now < 10000 ns loop
       M_AXIS_ACLK_tb <= '0';
       wait for 5 ns;
       M_AXIS_ACLK_tb <= '1';
@@ -83,8 +83,8 @@ begin
   process
   begin
     -- Initialize inputs
-    CELLS_IN_PRT_tb  <= x"0010";
-    CELLS_TO_SEND_tb <= x"000A";
+    CELLS_IN_PRT_tb  <= x"03a4";
+    CELLS_TO_SEND_tb <= x"03a3";
 
     -- Apply stimulus
     wait for 10 ns;
