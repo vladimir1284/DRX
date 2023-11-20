@@ -6,16 +6,16 @@
 /*****************************************************************************/
 /**
  *
- * @file cyclic_dma.c
+ * @file cyclic_dma_2MHz.c
  *
  * This file demonstrates how to use the xaxidma driver on the Xilinx AXI
- * DMA core (AXIDMA) to transfer packets in interrupt mode when the AXIDMA
+ * DMA core (AXIDMA) to transfer packets in polling mode when the AXIDMA
  * core is configured in Scatter Gather Mode
  *
  * This example demonstrates how to use cyclic DMA mode feature.
  * This program will recycle the NUMBER_OF_BDS_TO_TRANSFER
  * buffer descriptors to specified number of cyclic transfers defined in
- * "NUMBER_OF_CYCLIC_TRANSFERS".
+ * "NUMBER_OF_RAYS".
  *
  * This code assumes a Loop Counter hardware widget is connected to the AXI DMA
  * core for data packet generation. The first data cell is an index of the number
@@ -74,26 +74,13 @@
 #define INTC_DEVICE_ID          XPAR_SCUGIC_SINGLE_DEVICE_ID
 #endif
 
-/* Timeout loop counter for reset
- */
-#define RESET_TIMEOUT_COUNTER	10000
-
 /*
- * Number of BDs in the transfer example
- * We show how to submit multiple BDs for one transmit.
- * The receive side get one completion interrupt per cyclic transfer.
+ * Number of BDs (equivalent to the number of rays) in the transfer example.
+ * It is chosen above 1024 which is the number of allocated BDs so that it
+ * turns around the ring buffer.
  */
 
-#define NUMBER_OF_CYCLIC_TRANSFERS	20000
-
-/* The interrupt coalescing threshold and delay timer threshold
- * Valid range is 1 to 255
- *
- * We set the coalescing threshold to be the total number of packets.
- * The receive side will only get one completion interrupt per cyclic transfer.
- */
-#define COALESCING_COUNT		NUMBER_OF_PKTS_TO_TRANSFER
-#define DELAY_TIMER_COUNT		100
+#define NUMBER_OF_RAYS	2000
 
 #ifdef XPAR_INTC_0_DEVICE_ID
 #define INTC		XIntc
@@ -107,8 +94,6 @@
 #define data_t         u32
 
 #define SAMPLES        	1864
-// Add 1 for the ray index
-#define BYTES    		(SAMPLES+1)*sizeof(data_t)
 
 /*
  * Buffer and Buffer Descriptor related constant definition
@@ -119,7 +104,7 @@
 /************************** Function Prototypes ******************************/
 
 static int CheckData(int Length, u32 rayIndex, u32 *RxPacket);
-static int test_dataflow();
+static int test_dataflow(int samples);
 
 static int RxSetup(XAxiDma * AxiDmaInstPtr);
 
@@ -166,10 +151,48 @@ volatile int Error;
  *
  ******************************************************************************/
 int main(void) {
+
+	xil_printf("\r\n--- Entering main() --- \r\n");
+
+	int PRTs[] = { 928, 1024, 1096, 1184, 1344, 1408, 1864 };
+
+	for (int i = 0; i < 7; i++) {
+		int Status;
+		Status = test_dataflow(PRTs[i]);
+		if (Status != XST_SUCCESS) {
+			return XST_FAILURE;
+		}
+	}
+
+	xil_printf("--- Exiting main() --- \r\n");
+
+	return XST_SUCCESS;
+}
+
+/*****************************************************************************/
+/*
+ *
+ * This function test the transference for a selected PRT.
+ *
+ * We use 2MHz clock in samples generation.
+ *
+ * @param	Length is the length to check
+ * @param	StartValue is the starting value of the first byte
+ *
+ * @return	- XST_SUCCESS if validation is successful
+ *		- XST_FAILURE if validation fails.
+ *
+ * @note		None.
+ *
+ ******************************************************************************/
+static int test_dataflow(int samples) {
 	XAxiDma_Config *Config;
 	int Status;
 
-	xil_printf("\r\n--- Entering main() --- \r\n");
+	/* Initialize flags before start transfer test  */
+	RxDone = 0;
+	Error = 0;
+	int MaxBufferCount = 0;
 
 	Config = XAxiDma_LookupConfig(DMA_DEV_ID);
 	if (!Config) {
@@ -194,50 +217,15 @@ int main(void) {
 		return XST_FAILURE;
 	}
 
-	test_dataflow();
-
-	XAxiDma_Reset(&AxiDma);
-
-	xil_printf("--- Exiting main() --- \r\n");
-
-	if (Status != XST_SUCCESS) {
-		return XST_FAILURE;
-	}
-
-	return XST_SUCCESS;
-}
-
-/*****************************************************************************/
-/*
- *
- * This function checks data buffer after the DMA transfer is finished.
- *
- * We use the static tx/rx buffers.
- *
- * @param	Length is the length to check
- * @param	StartValue is the starting value of the first byte
- *
- * @return	- XST_SUCCESS if validation is successful
- *		- XST_FAILURE if validation fails.
- *
- * @note		None.
- *
- ******************************************************************************/
-static int test_dataflow() {
-	/* Initialize flags before start transfer test  */
-	RxDone = 0;
-	Error = 0;
-	int MaxBufferCount = 0;
-
-	/* Send a packet */
-	setupRay(SAMPLES, SAMPLES - 1); //TODO There must be an space between transactions
+	/* Start the counter */
+	setupRay(samples, samples - 1); //TODO There must be an space between transactions
 	enableCounter();
 
 	/*
 	 * Wait RX done
 	 */
 	while (1) {
-		int BdCount, Status;
+		int BdCount;
 		XAxiDma_Bd *BdPtr, *BdCurPtr;
 
 		/* Wait until the data has been received by the Rx channel */
@@ -274,20 +262,23 @@ static int test_dataflow() {
 
 		RxDone += BdCount;
 
-		if ((RxDone > NUMBER_OF_CYCLIC_TRANSFERS - 1) || (Status != XST_SUCCESS)) {
+		if ((RxDone > NUMBER_OF_RAYS - 1) || (Status != XST_SUCCESS)) {
 			break;
 		}
 	}
 
-	if (Error) {
+	if (Error || (Status != XST_SUCCESS)) {
 		xil_printf("Failed test receive %s done\r\n", RxDone ? "" : " not");
+		return XST_FAILURE;
 	} else {
-		disableCounter();
 		xil_printf(
 				"Successfully ran AXI DMA Cyclic SG transference of %d rays, MaxBufferCount: %d\r\n",
 				RxDone, MaxBufferCount);
 	}
 
+	disableCounter();
+	XAxiDma_Reset(&AxiDma);
+	return XST_SUCCESS;
 }
 
 /*****************************************************************************/
@@ -380,8 +371,9 @@ static int RxSetup(XAxiDma * AxiDmaInstPtr) {
 	XAxiDma_BdRingSetCoalesce(RxRingPtr, Coalesce, Delay);
 
 	/* Setup Rx BD space */
-	BdCount = XAxiDma_BdRingCntCalc(XAXIDMA_BD_MINIMUM_ALIGNMENT,
-			RX_BD_SPACE_HIGH - RX_BD_SPACE_BASE + 1);
+//	BdCount = XAxiDma_BdRingCntCalc(XAXIDMA_BD_MINIMUM_ALIGNMENT,
+//			RX_BD_SPACE_HIGH - RX_BD_SPACE_BASE + 1);
+	BdCount = 256;
 
 	Status = XAxiDma_BdRingCreate(RxRingPtr, RX_BD_SPACE_BASE,
 	RX_BD_SPACE_BASE,
@@ -446,6 +438,8 @@ static int RxSetup(XAxiDma * AxiDmaInstPtr) {
 	xil_printf("INFO: Max transfer length: %d\r\n", RxRingPtr->MaxTransferLen);
 	xil_printf("INFO: Buffer size: %d\r\n", MAX_PKT_LEN);
 	xil_printf("INFO: Number of BDs: %d\r\n", BdCount);
+	xil_printf("INFO: Last Buffer Addr: %x/%x\r\n", RxBufferPtr,
+			RX_BUFFER_HIGH);
 
 	/* Clear the receive buffer, so we can verify data
 	 */
