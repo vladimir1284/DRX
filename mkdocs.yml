@@ -1,0 +1,57 @@
+site_name: DRX FPGA Project Documentation
+site_description: Documentación detallada de los IP Cores y la Arquitectura de Hardware del proyecto DRX.
+site_author: DRX Team
+
+theme:
+  name: material
+  language: es
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Cambiar a modo oscuro
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Cambiar a modo claro
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tabbed:
+      alternate_style: true
+  - tables
+  - attr_list
+
+nav:
+  - Inicio: index.md
+  - Arquitectura del Sistema: system_architecture.md
+  - IP Cores:
+      - LoopCounter v1.0: ip_cores/LoopCounter.md
+      - LoopCounterConfig v1.0: ip_cores/LoopCounterConfig.md
+      - counterSimulator v1.0: ip_cores/counterSimulator.md
+      - counterConfig v1.0: ip_cores/counterConfig.md
+      - Generador de Datos IQ (data_gen): ip_cores/data_gen.md
