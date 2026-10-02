@@ -2,7 +2,7 @@
 
 ## 1. Resumen General (Overview)
 
-El módulo **data_gen** es un generador de muestras IQ de sintético para el sistema **DRX** (Receptor Digital de Radar). Este IP emula la salida del frontal de RF de radar, sintetizando ráfagas de datos en formato de 64 bits por palabra compuestas por una cabecera de trama (*header*) de metadatos del rayo y un conjunto de muestras IQ complejas.
+El módulo **data_gen** es un generador de muestras IQ sintético para el sistema **DRX** (Receptor Digital de Radar). Este IP emula la salida del frontal de RF de radar, sintetizando ráfagas de datos en formato de 64 bits por palabra compuestas por una cabecera de trama (*header*) de metadatos del rayo y un conjunto de muestras IQ complejas.
 
 Incluye la lógica de generación del reloj de FIFO (`clk_fifo`) con divisor dinámico en función del ancho de pulso transmitido (pulso corto / pulso largo).
 
@@ -21,32 +21,60 @@ Incluye la lógica de generación del reloj de FIFO (`clk_fifo`) con divisor din
 
 ## 2. Diagrama de Bloques y FSM Interna
 
-```
-                      +-------------------------------------------------+
-                      |                    data_gen                     |
-                      |                                                 |
-  clk --------------->| [ Generador de Clock FIFO ]---------------------> clk_fifo
-  rst --------------->| (Divisor por pulso corto/largo)                 |
-  pulso ------------->|                                                 |
-                      |                                                 |
-  en ---------------->| [ FSM de Trama IQ ]                             |
-  samples[31:0] ----->| (IDLE -> HEADER -> IQ)                            |=====> data_o[63:0]
-  freq[31:0] -------->|                                                 |
-                      +-------------------------------------------------+
+```mermaid
+graph LR
+    subgraph Inputs ["Entradas del Sistema"]
+        CLK["clk (100MHz)"]
+        RST["rst (Active Low)"]
+        EN["en"]
+        PULSE["pulso (1: Corto, 0: Largo)"]
+        SAMPLES["samples [31:0]"]
+        FREQ["freq [31:0]"]
+    end
+
+    subgraph Module ["data_gen"]
+        CLK_DIV["Divisor Dinámico de Reloj<br/>(PULSO_CORTO = 41 / PULSO_LARGO = 82)"]
+        FSM["FSM Generadora de Trama<br/>(IDLE -> HEADER -> IQ)"]
+    end
+
+    subgraph Outputs ["Salidas"]
+        CLK_FIFO["clk_fifo"]
+        DATA_O["data_o [63:0]"]
+    end
+
+    CLK --> CLK_DIV
+    CLK --> FSM
+    RST --> CLK_DIV
+    RST --> FSM
+    PULSE --> CLK_DIV
+    EN --> FSM
+    SAMPLES --> FSM
+
+    CLK_DIV --> CLK_FIFO
+    FSM --> DATA_O
 ```
 
 ### Máquina de Estados Finitos (FSM) de Generación de Trama
 
-```
-           +--------+         en = '1'        +----------+
-           | IDLE_S | ----------------------> | HEADER_S |
-           +--------+                         +----------+
-               ^                                   |
-               | index >= samples                  | index >= HDEPTH (2)
-               |                                   v
-               +----------------------------- +----------+
-                                              |   IQ_S   |
-                                              +----------+
+```mermaid
+stateDiagram-v2
+    [*] --> IDLE_S
+    IDLE_S --> HEADER_S : en = '1'
+
+    state HEADER_S {
+        [*] --> Word0_MagicNum : index = 0 (0xCAFEFFFFFFFFFFFF)
+        Word0_MagicNum --> Word1_RayCnt : index = 1 (ray_cnt)
+        Word1_RayCnt --> Word2_AzElev : index = 2 (azelev_c & azelev_c)
+    }
+
+    HEADER_S --> IQ_S : index >= HDEPTH (2)
+
+    state IQ_S {
+        [*] --> TransmittingIQ
+        TransmittingIQ --> TransmittingIQ : data_reg = iq_cnt x4<br/>(index < samples)
+    }
+
+    IQ_S --> IDLE_S : index >= samples
 ```
 
 1. **IDLE_S**: Reinicia contadores locales (`iq_cnt`, `index`). Si la señal de entrada `en = '1'`, evoluciona hacia `HEADER_S`.

@@ -19,41 +19,70 @@ Permite configurar de forma dinámica la cantidad total de celdas que componen u
 
 ### Diagrama de Bloques General
 
-```
-                        +---------------------------------------------------+
-                        |                 LoopCounter_v1_0                  |
-                        |                                                   |
-  m00_ENABLE ---------->| [ Lógica de Reset  ]                              |
-  m00_CELLS_IN_PRT ---->| [ y Validación     ]                              |
-  m00_CELLS_TO_SEND --->| [ Config_Validated ]---> m00_VALID_CONFIG       |
-                        |                                                   |
-  m00_axis_aclk -------->| [ Máquina de       ]                              |=====> m00_axis_tdata[31:0]
-  m00_axis_aresetn ---->| [ Estados (FSM)    ]                              |-------> m00_axis_tvalid
-                        | [ y Generador AXIS ]                              |-------> m00_axis_tlast
-                        |                                                   |<------- m00_axis_tready
-                        +---------------------------------------------------+
+```mermaid
+graph LR
+    subgraph Inputs ["Entradas de Control"]
+        ENABLE["m00_ENABLE"]
+        PRT["m00_CELLS_IN_PRT [15:0]"]
+        SEND["m00_CELLS_TO_SEND [15:0]"]
+    end
+
+    subgraph Core ["LoopCounter_v1_0"]
+        LOGIC["Lógica de Reset y Validación<br/>(config_validated)"]
+        FSM["Máquina de Estados (FSM)<br/>y Generador AXIS"]
+    end
+
+    subgraph AXIS ["Interfaz AXI4-Stream Master"]
+        TDATA["m00_axis_tdata [31:0]"]
+        TVALID["m00_axis_tvalid"]
+        TLAST["m00_axis_tlast"]
+        TREADY["m00_axis_tready"]
+    end
+
+    ENABLE --> LOGIC
+    PRT --> LOGIC
+    SEND --> LOGIC
+    LOGIC -->|"m00_VALID_CONFIG"| VALID["m00_VALID_CONFIG"]
+    LOGIC --> FSM
+
+    CLK["m00_axis_aclk"] --> FSM
+    RSTN["m00_axis_aresetn"] --> FSM
+
+    FSM --> TDATA
+    FSM --> TVALID
+    FSM --> TLAST
+    TREADY --> FSM
 ```
 
 ### Arquitectura de la FSM (Máquina de Estados Finitos)
 
 La FSM controla el flujo de envío de datos del flujo AXI4-Stream y la temporización del PRT:
 
-```
-        +-------------------------------------------------------+
-        |                                                       |
-        v                                                       |
-   +----------+   Reset desasertado   +--------------+          |
-   |   IDLE   | --------------------> | INIT_COUNTER |          |
-   +----------+                       +--------------+          |
-                                              |                 |
-                                              | Espera C_M_START_COUNT ciclos
-                                              v                 |
-   +----------+    counter_index =    +--------------+          |
-   | WAIT_PRT | <-------------------- | SEND_STREAM  |          |
-   +----------+    CELLS_TO_SEND      +--------------+          |
-        |                                                       |
-        | counter_index = CELLS_IN_PRT                          |
-        +-------------------------------------------------------+
+```mermaid
+stateDiagram-v2
+    [*] --> IDLE
+    IDLE --> INIT_COUNTER : Reset desasertado
+
+    state INIT_COUNTER {
+        [*] --> Waiting
+        Waiting --> Waiting : count < C_M_START_COUNT - 1
+    }
+
+    INIT_COUNTER --> SEND_STREAM : count = C_M_START_COUNT - 1
+
+    state SEND_STREAM {
+        [*] --> SendingData
+        SendingData --> SendingData : counter_index <= CELLS_TO_SEND
+    }
+
+    SEND_STREAM --> WAIT_PRT : tx_done = '1'<br/>(counter_index > CELLS_TO_SEND)
+
+    state WAIT_PRT {
+        [*] --> WaitingPRT
+        WaitingPRT --> WaitingPRT : counter_index < CELLS_IN_PRT
+    }
+
+    WAIT_PRT --> SEND_STREAM : counter_index = CELLS_IN_PRT<br/>(Reinicia índice e incrementa rayo)
 ```
 
 1. **IDLE**: Estado inicial de reposo tras el reset. Transiciona automáticamente a `INIT_COUNTER`.
@@ -126,15 +155,32 @@ El IP **LoopCounter_v1_0** se conecta típicamente en un diseño de bloques (*Bl
 1. **LoopCounterConfig_v1_0**: Proporciona las señales `m00_ENABLE`, `m00_CELLS_IN_PRT` y `m00_CELLS_TO_SEND` registradas mediante AXI4-Lite desde el Procesador (Zynq PS).
 2. **AXI Direct Memory Access (AXI DMA)**: Recibe el flujo AXI4-Stream en su puerto esclavo `S_AXIS_S2MM` y realiza transferencias cíclicas hacia la memoria DDR del PS.
 
-```
- +------------------------+         +---------------------+         +-----------------+
- | LoopCounterConfig_v1_0 |         |  LoopCounter_v1_0   |         |     AXI DMA     |
- |                        | ENABLE  |                     |  AXIS   |                 |
- |          slv_reg0[0] --|-------->| m00_ENABLE          | (M00)   |                 |
- |        slv_reg1[15:0] -|-------->| m00_CELLS_IN_PRT    |========>| S_AXIS_S2MM     |
- |        slv_reg2[15:0] -|-------->| m00_CELLS_TO_SEND   |         |                 |
- +------------------------+         +---------------------+         +-----------------+
-             ^                                                               |
-             | AXI4-Lite                                                     | AXI4 Memory Mapped
-             +----------------------- Zynq PS7 / AXI Interconnect <----------+
+```mermaid
+graph LR
+    subgraph PS ["Zynq PS7 / AXI Interconnect"]
+        AXI_LITE_M["AXI4-Lite Master"]
+        AXI_MM_S["AXI4 Memory Mapped Slave (DDR)"]
+    end
+
+    subgraph CFG ["LoopCounterConfig_v1_0"]
+        REG0["slv_reg0[0] (ENABLE)"]
+        REG1["slv_reg1[15:0] (CELLS_IN_PRT)"]
+        REG2["slv_reg2[15:0] (CELLS_TO_SEND)"]
+    end
+
+    subgraph CORE ["LoopCounter_v1_0"]
+        GEN["Generador AXI4-Stream"]
+    end
+
+    subgraph DMA ["AXI DMA"]
+        S2MM["S_AXIS_S2MM"]
+        M_AXI["M_AXI_S2MM"]
+    end
+
+    AXI_LITE_M ==> CFG
+    REG0 -->|"ENABLE"| GEN
+    REG1 -->|"CELLS_IN_PRT"| GEN
+    REG2 -->|"CELLS_TO_SEND"| GEN
+    GEN ==>|"AXI4-Stream (M00_AXIS)"| S2MM
+    M_AXI ==> AXI_MM_S
 ```

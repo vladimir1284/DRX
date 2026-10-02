@@ -19,15 +19,45 @@ Proporciona registros mapeados en memoria para ajustar los siguientes parámetro
 
 ## 2. Diagrama de Bloques y Arquitectura Interna
 
-```
-              +-------------------------------------------------------------------+
-              |                        counterConfig_v1_0                         |
-              |                                                                   |
-              |   +-----------------------+     +-----------------------------+   |
-  S00_AXI ===>|---| Interfaz AXI4-Lite    |---->| Registros de Control/Config |---|===> s00_freq_div  (slv_reg0[0])
- (32-bit)     |   | Decodificador Dirección|     | (slv_reg0, reg1, reg2, reg3)|---|===> s00_enable    (slv_reg1[0])
-              |   +-----------------------+     +-----------------------------+   |===> s00_max_count (slv_reg2[15:0])
-              +-------------------------------------------------------------------+
+```mermaid
+graph LR
+    subgraph AXI_BUS ["Bus AXI4-Lite (S00_AXI)"]
+        AWADDR["s00_axi_awaddr [3:0]"]
+        WDATA["s00_axi_wdata [31:0]"]
+        ARADDR["s00_axi_araddr [3:0]"]
+        RDATA["s00_axi_rdata [31:0]"]
+    end
+
+    subgraph CORE ["counterConfig_v1_0"]
+        DECODER["Decodificador AXI4-Lite<br/>y Control de Registros"]
+
+        subgraph REGS ["Registros Internos"]
+            REG0["slv_reg0<br/>(freq_div)"]
+            REG1["slv_reg1<br/>(enable)"]
+            REG2["slv_reg2<br/>(max_count)"]
+            REG3["slv_reg3<br/>(Reservado)"]
+        end
+    end
+
+    subgraph OUTPUTS ["Salidas de Control a PL"]
+        FREQ["s00_freq_div"]
+        ENABLE["s00_enable"]
+        MAX["s00_max_count [15:0]"]
+    end
+
+    AWADDR --> DECODER
+    WDATA --> DECODER
+    ARADDR --> DECODER
+    DECODER --> RDATA
+
+    DECODER --> REG0
+    DECODER --> REG1
+    DECODER --> REG2
+    DECODER --> REG3
+
+    REG0 -->|"bit 0"| FREQ
+    REG1 -->|"bit 0"| ENABLE
+    REG2 -->|"bits 15:0"| MAX
 ```
 
 ---

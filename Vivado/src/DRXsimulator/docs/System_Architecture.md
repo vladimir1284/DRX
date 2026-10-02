@@ -10,51 +10,40 @@ El propósito principal de esta arquitectura es evaluar el ancho de banda, la la
 
 ## 2. Diagrama de Arquitectura Global e Interconexión de IPs
 
-```
-+----------------------------------------------------------------------------------------------------+
-|                                      ZYNQ-7000 PROCESSING SYSTEM                                   |
-|                                                                                                    |
-|  +--------------------------------+                  +------------------------------------------+  |
-|  |  Aplicación Software / Kernel  |                  |        Memoria Principal (DDR RAM)        |  |
-|  |   (Driver AXI-Lite & DMA)      |                  |   [Buffers Cíclicos de Recepción S2MM]   |  |
-|  +--------------------------------+                  +------------------------------------------+  |
-|                 |                                                          ^                       |
-+-----------------|----------------------------------------------------------|-----------------------+
-                  |                                                          |
-                  | AXI4-Lite (GP0 Master)                                   | AXI4 Memory Mapped
-                  v                                                          | (HP0 High Performance)
-+----------------------------------------------------------------------------|-----------------------+
-| PL (LOGICA PROGRAMABLE FPGA)                                               |                       |
-|                                                                            |                       |
-|   +---------------------------------------+                                |                       |
-|   |         AXI INTERCONNECT              |                                |                       |
-|   +---------------------------------------+                                |                       |
-|        |                             |                                     |                       |
-|        | AXI4-Lite (Control)         | AXI4-Lite (Control)                 |                       |
-|        v                             v                                     |                       |
-|   +------------------------+    +--------------------+                     |                       |
-|   | LoopCounterConfig_v1_0 |    | counterConfig_v1_0 |                     |                       |
-|   | (IP Config Registros)  |    | (IP Config Regs)   |                     |                       |
-|   +------------------------+    +--------------------+                     |                       |
-|        |                             |                                     |                       |
-|        | Senales de                  | Senales de                          |                       |
-|        | Control Paralelo            | Control Paralelo                    |                       |
-|        v                             v                                     |                       |
-|   +------------------------+    +-----------------------+                  |                       |
-|   |    LoopCounter_v1_0    |    | counterSimulator_v1_0 |                  |                       |
-|   | (Generador de Celdas)  |    |  (Generador Cuentas)  |                  |                       |
-|   +------------------------+    +-----------------------+                  |                       |
-|        |                             |                                     |                       |
-|        | AXI4-Stream Master          | AXI4-Stream Master                  |                       |
-|        +------------------+----------+                                     |                       |
-|                           |                                                |                       |
-|                           v AXI4-Stream (M00_AXIS)                         |                       |
-|                 +------------------+                                       |                       |
-|                 | AXI DIRECT       |                                       |                       |
-|                 | MEMORY ACCESS    |---------------------------------------+                       |
-|                 | (AXI DMA S2MM)   |                                       |                       |
-|                 +------------------+                                       |                       |
-+----------------------------------------------------------------------------------------------------+
+```mermaid
+flowchart TB
+    subgraph PS ["ZYNQ-7000 Processing System (PS)"]
+        SW_APP["Aplicación Software / Kernel Linux<br/>(Driver AXI-Lite & DMA)"]
+        DDR_MEM["Memoria Principal DDR RAM<br/>[Buffers Cíclicos de Recepción S2MM]"]
+    end
+
+    subgraph PL ["Lógica Programable FPGA (PL)"]
+        INTERCONNECT["AXI Interconnect"]
+
+        subgraph CFG_IPS ["IPs de Configuración AXI-Lite"]
+            LOOP_CFG["LoopCounterConfig_v1_0"]
+            CNT_CFG["counterConfig_v1_0"]
+        end
+
+        subgraph GEN_IPS ["IPs Generadores de Tráfico AXI-Stream"]
+            LOOP_GEN["LoopCounter_v1_0"]
+            CNT_GEN["counterSimulator_v1_0"]
+        end
+
+        AXI_DMA["AXI Direct Memory Access<br/>(AXI DMA S2MM)"]
+    end
+
+    SW_APP ==>|"AXI4-Lite (GP0 Master)"| INTERCONNECT
+    INTERCONNECT ==>|"AXI4-Lite (0x43C00000)"| LOOP_CFG
+    INTERCONNECT ==>|"AXI4-Lite (0x43C10000)"| CNT_CFG
+
+    LOOP_CFG -->|"Control (ENABLE, PRT, SEND)"| LOOP_GEN
+    CNT_CFG -->|"Control (ENABLE, MAX_COUNT)"| CNT_GEN
+
+    LOOP_GEN ==>|"AXI4-Stream Master (M00_AXIS)"| AXI_DMA
+    CNT_GEN -.->|"Modo Alternativo AXIS"| AXI_DMA
+
+    AXI_DMA ==>|"AXI4 Memory Mapped (HP0 High Performance)"| DDR_MEM
 ```
 
 ---
@@ -70,6 +59,31 @@ El flujo de información y control opera en dos planos claramente diferenciados:
    - Para el modo contador lineal: Escribe en `slv_reg2` la cuenta máxima por ráfaga (`max_count`).
 3. **Activación de Generación**: Escribe el bit `0` de `slv_reg0` / `slv_reg1` (`ENABLE = '1'`).
 4. **Respuesta en Hardware**: El IP de configuración deserializa los datos AXI4-Lite y activa inmediatamente las líneas directas de habilitación y parámetros de control hacia el IP de generación (`LoopCounter_v1_0` / `counterSimulator_v1_0`).
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Software as Software (PS)
+    participant ConfigIP as LoopCounterConfig (AXI-Lite)
+    participant GenIP as LoopCounter (AXIS)
+    participant DMA as AXI DMA (S2MM)
+    participant RAM as Memoria DDR
+
+    Software->>ConfigIP: Escribe CELLS_IN_PRT (slv_reg1 = 2000)
+    Software->>ConfigIP: Escribe CELLS_TO_SEND (slv_reg2 = 1000)
+    Software->>ConfigIP: Activa ENABLE (slv_reg0[0] = 1)
+    ConfigIP->>GenIP: Asienta señales m00_ENABLE, PRT, SEND
+    GenIP->>GenIP: Valida config (VALID_CONFIG = 1) e inicia FSM
+
+    loop Ráfaga de Transmisión Por Rayo
+        GenIP->>DMA: TVALID + TDATA (Index 0: ray_cnt)
+        GenIP->>DMA: TVALID + TDATA (Index 1..N: Celdas)
+        GenIP->>DMA: TVALID + TDATA + TLAST (Muestra N)
+        DMA->>RAM: Transferencia en Ráfaga AXI HP0 a DDR
+    end
+
+    DMA-->>Software: Notificación de Transferencia Completa / IRQ
+```
 
 ### Plano B: Generación y Transferencia de Datos (Flujo Ascendente / PL -> PS)
 1. **Mapeo de Paquetes AXI4-Stream**:

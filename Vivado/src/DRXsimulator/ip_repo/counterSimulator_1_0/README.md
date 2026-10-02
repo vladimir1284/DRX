@@ -16,32 +16,58 @@ Permite simular ráfagas de datos en bloques de tamaño configurable (`max_count
 
 ## 2. Diagrama de Bloques y Arquitectura Interna
 
-```
-                        +---------------------------------------------------+
-                        |               counterSimulator_v1_0               |
-                        |                                                   |
-  m00_enable ---------->| [ Lógica de Reset  ]                              |
-  m00_max_count -------->| [ y Control        ]                              |
-                        |                                                   |
-  m00_axis_aclk -------->| [ Máquina de       ]                              |=====> m00_axis_tdata[31:0]
-  m00_axis_aresetn ---->| [ Estados (FSM)    ]                              |-------> m00_axis_tvalid
-                        | [ y Generador AXIS ]                              |-------> m00_axis_tlast
-                        |                                                   |<------- m00_axis_tready
-                        +---------------------------------------------------+
+```mermaid
+graph LR
+    subgraph Inputs ["Entradas de Control"]
+        ENABLE["m00_enable"]
+        MAX["m00_max_count [15:0]"]
+    end
+
+    subgraph Core ["counterSimulator_v1_0"]
+        LOGIC["Lógica de Reset combinada<br/>(ARESETN and enable)"]
+        FSM["Máquina de Estados (FSM)<br/>y Lógica de Conteo"]
+    end
+
+    subgraph AXIS ["Interfaz AXI4-Stream Master"]
+        TDATA["m00_axis_tdata [31:0]"]
+        TVALID["m00_axis_tvalid"]
+        TLAST["m00_axis_tlast"]
+        TREADY["m00_axis_tready"]
+    end
+
+    ENABLE --> LOGIC
+    MAX --> FSM
+    LOGIC --> FSM
+
+    CLK["m00_axis_aclk"] --> FSM
+    RSTN["m00_axis_aresetn"] --> LOGIC
+
+    FSM --> TDATA
+    FSM --> TVALID
+    FSM --> TLAST
+    TREADY --> FSM
 ```
 
 ### Descripción de la Máquina de Estados Finitos (FSM)
 
-```
-   +----------+   Reset Desasertado   +--------------+
-   |   IDLE   | --------------------> | INIT_COUNTER |
-   +----------+                       +--------------+
-        ^                                     |
-        | tx_done = '1'                       | Espera C_M_START_COUNT ciclos
-        | (Transmisión completada)            v
-        +---------------------------- +--------------+
-                                      | SEND_STREAM  |
-                                      +--------------+
+```mermaid
+stateDiagram-v2
+    [*] --> IDLE
+    IDLE --> INIT_COUNTER : Reset desasertado
+
+    state INIT_COUNTER {
+        [*] --> WaitState
+        WaitState --> WaitState : count < C_M_START_COUNT - 1
+    }
+
+    INIT_COUNTER --> SEND_STREAM : count = C_M_START_COUNT - 1
+
+    state SEND_STREAM {
+        [*] --> Sending
+        Sending --> Sending : count_sig < max_count
+    }
+
+    SEND_STREAM --> IDLE : tx_done = '1'<br/>(count_sig = max_count)
 ```
 
 - **IDLE**: Estado inicial de inactividad tras el reset. Transiciona inmediatamente a `INIT_COUNTER`.
@@ -106,14 +132,28 @@ El módulo **counterSimulator_v1_0** se conecta en el diseño de hardware `count
 1. **counterConfig_v1_0**: Suministra los valores de control `m00_enable` y `m00_max_count` vía AXI4-Lite.
 2. **AXI Direct Memory Access (DMA)**: Conectado a la salida `M00_AXIS` para transferir cíclicamente la secuencia de prueba hacia la memoria RAM del sistema.
 
-```
- +--------------------+                     +-----------------------+                     +-----------------+
- | counterConfig_v1_0 |                     | counterSimulator_v1_0 |                     |     AXI DMA     |
- |                    | enable              |                       |  AXI4-Stream        |                 |
- |        s00_enable -|-------------------->| m00_enable            |  Master             |                 |
- |     s00_max_count -|-------------------->| m00_max_count         |====================>| S_AXIS_S2MM     |
- +--------------------+                     +-----------------------+                     +-----------------+
-           ^                                                                                       |
-           | AXI4-Lite                                                                             | AXI Memory Mapped
-           +----------------------------- Zynq PS7 / AXI Interconnect <-------------------------+
+```mermaid
+graph LR
+    subgraph CFG ["counterConfig_v1_0"]
+        EN_OUT["s00_enable"]
+        MAX_OUT["s00_max_count"]
+    end
+
+    subgraph CORE ["counterSimulator_v1_0"]
+        GEN["Generador AXI4-Stream"]
+    end
+
+    subgraph DMA ["AXI DMA"]
+        S2MM["S_AXIS_S2MM"]
+        M_AXI["M_AXI_S2MM"]
+    end
+
+    subgraph DDR ["Zynq PS DDR RAM"]
+        MEM["Buffer de Recepción"]
+    end
+
+    EN_OUT -->|"m00_enable"| GEN
+    MAX_OUT -->|"m00_max_count"| GEN
+    GEN ==>|"AXI4-Stream Master"| S2MM
+    M_AXI ==>|"AXI Memory Mapped"| MEM
 ```

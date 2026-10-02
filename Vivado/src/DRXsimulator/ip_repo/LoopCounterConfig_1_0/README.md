@@ -16,15 +16,45 @@ Permite que el procesador (PS - *Processing System*, ejecute Linux/PetaLinux o a
 
 ## 2. Diagrama de Bloques y Arquitectura Interna
 
-```
-              +-------------------------------------------------------------------+
-              |                     LoopCounterConfig_v1_0                        |
-              |                                                                   |
-              |   +-----------------------+     +-----------------------------+   |
-  S00_AXI ===>|---| Interfaz AXI4-Lite    |---->| Registros de Control/Config |---|===> ENABLE (slv_reg0[0])
- (32-bit)     |   | Decodificador Dirección|     | (slv_reg0, reg1, reg2, reg3)|---|===> CELLS_IN_PRT (slv_reg1[15:0])
-              |   +-----------------------+     +-----------------------------+   |===> CELLS_TO_SEND (slv_reg2[15:0])
-              +-------------------------------------------------------------------+
+```mermaid
+graph LR
+    subgraph AXI_BUS ["Bus AXI4-Lite (S00_AXI)"]
+        AWADDR["S_AXI_AWADDR [3:0]"]
+        WDATA["S_AXI_WDATA [31:0]"]
+        ARADDR["S_AXI_ARADDR [3:0]"]
+        RDATA["S_AXI_RDATA [31:0]"]
+    end
+
+    subgraph CORE ["LoopCounterConfig_v1_0"]
+        DECODER["Decodificador de Dirección<br/>y Control de Handshake AXI"]
+
+        subgraph REGS ["Registros Mapeados en Memoria"]
+            REG0["slv_reg0<br/>(Control / Enable)"]
+            REG1["slv_reg1<br/>(CELLS_IN_PRT)"]
+            REG2["slv_reg2<br/>(CELLS_TO_SEND)"]
+            REG3["slv_reg3<br/>(Reservado)"]
+        end
+    end
+
+    subgraph OUTPUTS ["Salidas Paralelo a PL"]
+        ENABLE["ENABLE / s00_enable"]
+        PRT["CELLS_IN_PRT / s00_cells_in_prt"]
+        SEND["CELLS_TO_SEND / s00_cells_to_send"]
+    end
+
+    AWADDR --> DECODER
+    WDATA --> DECODER
+    ARADDR --> DECODER
+    DECODER --> RDATA
+
+    DECODER --> REG0
+    DECODER --> REG1
+    DECODER --> REG2
+    DECODER --> REG3
+
+    REG0 -->|"bit 0"| ENABLE
+    REG1 -->|"bits 15:0"| PRT
+    REG2 -->|"bits 15:0"| SEND
 ```
 
 El módulo recibe transacciones AXI4-Lite compuestas por direcciones de 4 bits (`S_AXI_AWADDR`, `S_AXI_ARADDR`) y datos de 32 bits (`S_AXI_WDATA`, `S_AXI_RDATA`). Las escrituras en registros son decodificadas y almacenadas sincrónicamente con `s00_axi_aclk`.
